@@ -16,9 +16,11 @@ namespace WebAPITest.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(string playerName, int score)
+        public string Get(string playerName, int score, int id)
         {
             DatabaseManager dbMan = new DatabaseManager();
+            playerName = dbMan.GetPlayerName(id);
+            score = dbMan.GetPlayerScore(id);
             //actually do that
             return "updated score for " + playerName + " of " + score.ToString();
         }

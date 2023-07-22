@@ -16,10 +16,10 @@ namespace WebAPITest.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(string name)
+        public string Get(string name, int ID)
         {
             DatabaseManager dbman = new DatabaseManager();
-            string result = dbman.SetPlayer(name);
+            string result = dbman.SetPlayer(name, ID);
             return result;
         }
 

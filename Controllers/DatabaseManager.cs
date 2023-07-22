@@ -28,13 +28,14 @@ namespace WebAPITest.Controllers
             }
         }
 
-        internal string SetPlayer(string name)
+        internal string SetPlayer(string name, int ID)
         {
             string result;
             try
             {
                 Connect();
-                string query = "INSERT INTO triviagame.isplayerconnected(WhichPlayer) values('" + name + "')";
+                ;
+                string query = "UPDATE `triviagame`.`isplayerconnected` SET `WhichPlayer` = ('" + name + "') WHERE(`PlayerID` = '" + ID +"')";
                 cmd = new MySqlCommand(query, con);
                 reader = cmd.ExecuteReader();
                 result = "Success";
@@ -48,6 +49,53 @@ namespace WebAPITest.Controllers
             return result;
         }
 
+        internal int SetScore(int score)
+        {
+            int result;
+            try
+            {
+                Connect();
+                string query = "INSERT INTO triviagame.playerscore(PlayerScore) values(" + score + ")";
+                cmd = new MySqlCommand(query, con);
+                reader = cmd.ExecuteReader();
+                result = score;
+
+            }
+            catch
+            {
+                Disconnect();
+                return 0;
+            }
+            return result;
+        }
+
+        public int GetPlayerScore(int whichPlayerID)
+        {
+            try
+            {
+                Connect();
+                string query = "SELECT PlayerScore FROM triviagame.playerscore WHERE WhichPlayerID =" + whichPlayerID;
+                cmd = new MySqlCommand(query, con);
+                reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    int score = reader.GetInt32("PlayerScore");
+                    Disconnect();
+                    return score;
+                }
+                else
+                {
+                    Disconnect();
+                    return 0;
+                }
+            }
+            catch
+            {
+                Disconnect();
+                return 0;
+            }
+
+        }
         public string GetPlayerName(int playerId)
         {
             try
