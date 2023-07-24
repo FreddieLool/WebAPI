@@ -49,13 +49,13 @@ namespace WebAPITest.Controllers
             return result;
         }
 
-        internal int SetScore(int score)
+        internal int SetScore(int score, int ID)
         {
             int result;
             try
             {
                 Connect();
-                string query = "INSERT INTO triviagame.playerscore(PlayerScore) values(" + score + ")";
+                string query = "UPDATE `triviagame`.`isplayerconnected`SET `PlayerScore` = (" + score + ") WHERE(`PlayerID` = '" + ID + "')";
                 cmd = new MySqlCommand(query, con);
                 reader = cmd.ExecuteReader();
                 result = score;
@@ -159,5 +159,54 @@ namespace WebAPITest.Controllers
             }
 
         }
+
+        public int GetPlayerConnection(int playerId)
+        {
+            try
+            {
+                Connect();
+                string query = "SELECT IsConnected FROM triviagame.isplayerconnected WHERE PlayerID =" + playerId;
+                cmd = new MySqlCommand(query, con);
+                reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    int isConnected = reader.GetInt16("IsConnected");
+                    Disconnect();
+                    return isConnected;
+                }
+                else
+                {
+                    Disconnect();
+                    return 0;
+                }
+            }
+            catch
+            {
+                Disconnect();
+                return 0;
+            }
+
+        }
+        internal int SetPlayerConnection(int connection, int ID)
+        {
+            int result;
+            try
+            {
+                Connect();
+                string query = "UPDATE `triviagame`.`isplayerconnected` SET `IsConnected` = (" + connection + ") WHERE(`PlayerID` = '" + ID + "')";
+                cmd = new MySqlCommand(query, con);
+                reader = cmd.ExecuteReader();
+                result = connection;
+
+            }
+            catch
+            {
+                Disconnect();
+                return 0;
+            }
+            return result;
+        }
     }
+
+
 }
